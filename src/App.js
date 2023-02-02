@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import Task from './Task';
 import './App.css';
 
-function App() {
+const App = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
 
@@ -10,15 +11,15 @@ function App() {
   };
 
   const addTask = () => {
-    setTasks([...tasks, newTask]);
+    const task = {
+      id: tasks.length === 0 ? 1 : tasks[tasks.length - 1].id + 1,
+      taskName: newTask,
+    };
+    setTasks([...tasks, task]);
   };
 
-  const deleteTask = (task) => {
-    setTasks(
-      tasks.filter((t) => {
-        return t !== task;
-      })
-    );
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
   };
 
   return (
@@ -31,15 +32,16 @@ function App() {
       <div className='list'>
         {tasks.map((task) => {
           return (
-            <div>
-              <h2>{task}</h2>
-              <button onClick={() => deleteTask(task)}>x</button>
-            </div>
+            <Task
+              deleteTask={deleteTask}
+              taskName={task.taskName}
+              id={task.id}
+            />
           );
         })}
       </div>
     </div>
   );
-}
+};
 
 export default App;
